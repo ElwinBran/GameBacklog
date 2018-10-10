@@ -11,10 +11,15 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    static AppDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = AppDatabase.getInstance(this);
         setContentView(R.layout.activity_main);
+        this.setTitle(R.string.app_title);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
