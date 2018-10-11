@@ -21,6 +21,7 @@ public class Converters
         return GameStatus.values()[value];
     }
 
+    @TypeConverter
     public static Integer statusToInteger(GameStatus status){
         return status.ordinal();
     }

@@ -3,12 +3,14 @@ package com.github.elwinbran.gamebacklog;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-@Entity(tableName = "reminder")
+@Entity(tableName = "backlogEntry")
 public class BacklogEntry implements Parcelable
 {
     public final static Parcelable.Creator<BacklogEntry> CREATOR =
@@ -23,6 +25,7 @@ public class BacklogEntry implements Parcelable
     };
 
     @PrimaryKey
+    @NonNull
     private String gameTitle;
 
     @ColumnInfo(name = "platform")
@@ -32,13 +35,21 @@ public class BacklogEntry implements Parcelable
     private String notes;
 
     @ColumnInfo(name = "added")
+    @TypeConverters(Converters.class)
     private Date added;
 
     @ColumnInfo(name = "status")
+    @TypeConverters(Converters.class)
     private GameStatus status;
+
+    public BacklogEntry()
+    {
+        this.gameTitle = "";
+    }
 
     public BacklogEntry(Parcel in)
     {
+        this();
         this.setGameTitle(in.readString());
         this.setPlatform(in.readString());
         this.setNotes(in.readString());
@@ -46,12 +57,13 @@ public class BacklogEntry implements Parcelable
         this.setStatus(Converters.fromInteger(in.readInt()));
     }
 
-    public BacklogEntry(String gameTitle, String platform, String notes, Date addedDate, GameStatus status)
+    public BacklogEntry(String gameTitle, String platform, String notes, Date added, GameStatus status)
     {
+        this();
         this.setGameTitle(gameTitle);
         this.setPlatform(platform);
         this.setNotes(notes);
-        this.setAdded(addedDate);
+        this.setAdded(added);
         this.setStatus(status);
     }
 
