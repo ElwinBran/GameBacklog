@@ -1,13 +1,24 @@
 package com.github.elwinbran.gamebacklog;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,12 +34,32 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        RecyclerView backlogView = findViewById(R.id.backlogView);
+        //View muhSingleCard = LayoutInflater.from(this).inflate(R.layout.backlog_entry_card, backlogView, false);
+        //applyGameToEntry(muhSingleCard, db.backlogEntryDAO().getAllEntries().get(0));
+        List<BacklogEntry> entries = db.backlogEntryDAO().getAllEntries();
+        List<View.OnClickListener> actions = new LinkedList<>();
+        for(final BacklogEntry entry : entries)
+        {
+            actions.add(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startEditing(entry);
+                }
+            });
+        }
+        BacklogAdapter adapter = new BacklogAdapter(entries, actions);
+        backlogView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        backlogView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addGameButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent myIntent = new Intent(getApplicationContext(), EditActivity.class);
+                startActivity(myIntent);
             }
         });
     }
@@ -53,5 +84,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    static void applyGameToEntry(View entry, BacklogEntry game)
+    {
+        ((TextView)entry.findViewById(R.id.gameTitleTextView)).setText(game.getGameTitle());
+        ((TextView)entry.findViewById(R.id.platformTextView)).setText(game.getPlatform());
+        ((TextView)entry.findViewById(R.id.statusTextView)).setText(game.getStatus().getText());
+        ((TextView)entry.findViewById(R.id.dateTextView)).setText(game.getAdded().toString());
+    }
+
+    void addEntry(List<BacklogEntry> entries, List<View.OnClickListener> actions, final BacklogEntry newEntry)
+    {
+        entries.add(newEntry);
+        actions.add(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startEditing(newEntry);
+            }
+        });
+    }
+
+    void startEditing(BacklogEntry entry)
+    {
+        Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+        intent.putExtra("entry", entry);
+        startActivity(intent);
     }
 }

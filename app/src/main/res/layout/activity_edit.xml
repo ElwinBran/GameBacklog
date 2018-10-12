@@ -7,21 +7,23 @@
     android:background="@color/background">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/saveEditbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="17dp"
         android:clickable="true"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@android:drawable/ic_menu_save"
-        tools:layout_editor_absoluteX="310dp"
-        tools:layout_editor_absoluteY="454dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_save" />
 
     <LinearLayout
-        android:layout_width="338dp"
-        android:layout_height="357dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/layout_bg"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
